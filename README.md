@@ -11,7 +11,8 @@ Objetivos:
 ## Stack utilizada
 
 * `Node.js` v16.14.2
-* `express` 4.18.2,
+* `express` 4.18.2
+* `node-cron` 3.0.3
 
 
 ## Instalação
@@ -24,7 +25,7 @@ Objetivos:
     npm install starkbank
     npm install thread-sleep
     npm install --save express node-cron fs
-    
+
  ```
 
 ## Como rodar o projeto
