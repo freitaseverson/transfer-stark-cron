@@ -27,8 +27,23 @@ Objetivos:
     npm install --save express node-cron fs
 
  ```
+ 
 
 ## Como rodar o projeto
+
+* Antes de executar o projeto altere o agendamento do cron job para executar a cada 3 horas durante 24 horas.
+
+Altera o código abaixo:
+```
+//Executa a cada 3 minutos
+var task = cron.schedule("0 */3 * * * *", transferJob, {scheduled: false});
+```
+
+Para o novo código:
+```
+//Executa a cada 3 horas
+var task = cron.schedule("0 * */3 * * *", transferJob, {scheduled: false});
+```
 
 * No terminal, acesse a pasta raiz do projeto e insira o comando `node index.js` para rodar. Em alguns segundos será exibido o log de execução
   ```
