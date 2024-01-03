@@ -3,31 +3,23 @@ const express = require("express");
 const starkbank = require('starkbank');
 const sleep = require('thread-sleep');
 const fs = require('fs'); 
+const config = require('config');
+const { formatedDate, contacts } = require('./utils/utils');
 
 app = express();
 // number of executions for period
-const countLimitExecute = 8;
+const countLimitExecute = parseInt(config.get('numberLimitExec'));
+
 let transferList = [];
 let transferFailedList = [];
 let average = 0;
 let countExec = 0;
 
-let privateKeyContent = `
------BEGIN EC PARAMETERS-----
-BgUrgQQACg==
------END EC PARAMETERS-----
------BEGIN EC PRIVATE KEY-----
-MHQCAQEEINDJKqPsgNyIjfqlbkrHtBFl7EJGX0oHKqQawzIO3y4FoAcGBSuBBAAK
-oUQDQgAEXSIezYEkc6XOdcFwADIFyENTvbsEx8y7eYcPRqGayt7ZWsfCKqVR74GM
-ngKRXv6PGMfDRs25FqKBjgVR5pEx4Q==
------END EC PRIVATE KEY-----
-`
-
 // for project users:
 let user = new starkbank.Project({
-    environment: 'sandbox',
-    id: '6236122648674304',
-    privateKey: privateKeyContent
+    environment: config.get('environment'),
+    id: config.get('projectId'),
+    privateKey: config.get('privateKey')
 });
 
 starkbank.user = user;
@@ -44,12 +36,13 @@ setTimeout(() => {
 
 app.listen(1313);
 
+console.log('\n'+ formatedDate()+' - Executando TRANSFERS-STARK-CRON...');
+
 async function transferJob(){       
-    console.log('##### BEGIN - Executando | Current Time: '+ getFormatedDate());
+    console.log(''+formatedDate()+ ' ########## BEGIN - Executando');
     
     countExec++;
     let transfers = [];
-    //let myarray = [];
     let myarray = getContacts();
     try {
         // Create transfers
@@ -60,8 +53,6 @@ async function transferJob(){
             
             let transferId = transfer.id;
             let transferStatus = transfer.status;
-            //transfer.log
-
             logs = logs.concat('', transferId + ' - ' + transfer.externalId + ' - ' + transfer.amount 
                 + ' - ' + transfer.taxId + '\n');
                   
@@ -69,19 +60,18 @@ async function transferJob(){
             while(transferStatus == 'processing' || transferStatus == 'created'){
                 // waiting time for logs consult
                 sleep(10000);
-                console.log('\n Transfer log - '+ transfer.id);
                 // Get transfer for know changed status 
                 let transferAux = await starkbank.transfer.get(transferId);
                 transferStatus = transferAux.status;
-                console.log('transferStatus == '+ transferStatus);
+                console.log('Transfer log - '+ transfer.id + ' status == '+ transferStatus);
                 if(transferStatus == 'success' || transferStatus == 'failed') {
 
-                    console.log('created= '+ transferAux.created + ' updated =' + transferAux.updated);
                     const createdDate = new Date(transferAux.created);
                     const updatedDate = new Date(transferAux.updated);
                     // Calculating time for changed status
                     let timelog =  updatedDate.getTime() - createdDate.getTime();
-                    console.log('difference_ms = '+ timelog);
+                    console.log('created= '+ transferAux.created + ' updated =' + transferAux.updated 
+                        + ' >>>>> difference_ms = '+ timelog);
                     transferList.push([transferAux, timelog]);
 
                     if(transferStatus == 'failed'){
@@ -107,7 +97,7 @@ async function transferJob(){
         console.log("************************** " + err.message);
     }
 
-    console.log('#####    END - Executando | Current Time: '+ getFormatedDate());
+    console.log(''+ formatedDate() + ' ##########   END - Executando');
 
     if(countExec >= countLimitExecute) {
         getReport();
@@ -127,43 +117,6 @@ function getUuid(){
     return Math.floor(Date.now());
 }
 
-function getFormatedDate(){
-    
-    const date = new Date(); 
-
-    const formatData = (input) => { 
-    if (input > 9) { 
-        return input; 
-    } else return `0${input}`; 
-    };
-
-    // Function to convert 
-    // 24 Hour to 12 Hour clock 
-    const formatHour = (input) => { 
-    if (input > 12) { 
-        return input - 12; 
-    } 
-    return input; 
-    }; 
-
-    // Data about date 
-    const format = { 
-        dd: formatData(date.getDate()), 
-        mm: formatData(date.getMonth() + 1), 
-        yyyy: date.getFullYear(), 
-        HH: formatData(date.getHours()), 
-        hh: formatData(formatHour(date.getHours())), 
-        MM: formatData(date.getMinutes()), 
-        SS: formatData(date.getSeconds()), 
-    }; 
-
-    const format24Hour = ({ dd, mm, yyyy, HH, MM, SS }) => { 
-        return `${dd}/${mm}/${yyyy} ${HH}:${MM}:${SS}`; 
-    }; 
-    
-    return format24Hour(format); 
-}
-
 function getPerSucess() {
     let countSucess = 0;
     let totalTimeUpdate = 0;
@@ -180,19 +133,7 @@ function getPerSucess() {
 }
 
 function getContacts(){
-    let dataContact = [
-        ['00694389', '2461', '3314317866267628', '27.902.211/0001-76', 'FPM Group'],
-        ['24610065', '4320', '240636898352767', '272.696.270-02', 'Daina Rehmert'],
-        ['31880826', '1296', '7649414384171378', '54.222.994/0001-10', 'PYDA Group'],
-        ['04406371', '9101', '1633061087450179', '42.654.984/0001-74', 'RAVVV Group'],
-        ['08071414', '7009', '9421940089544799', '19.727.132/0001-48', 'Telma Spargo'],
-        ['03102185', '8650', '8566071965644841', '61.688.499/0001-66', 'INZ S.A.'],
-        ['17192451', '5734', '4607188913089125', '55.330.936/0001-72', 'DRJ S.A.'],
-        ['04138455', '2337', '7777525330771462', '20.792.828/0001-37', 'Meggan Eireli'],
-        ['17343510', '5548', '4144640162680751', '58.766.050/0001-64', 'MGABQ Ltda.'],
-        ['02197569', '9689', '8944178065480508', '707.534.580-04', 'Jackie Accurso']
-    ]
-    
+    let dataContact = contacts();
     let contactArray = [];
     for (let index = 0; index < dataContact.length; index++) {
         const dataItem = dataContact[index];
@@ -220,12 +161,12 @@ function getContacts(){
 }
 
 function getReport(){
-    let result = '\n------------------ RELATORIO EXECUCAO - ' + getFormatedDate() +' ----------------------- '+
+    let result = '\n------------------ RELATORIO EXECUCAO - ' + formatedDate() +' ----------------------- '+
         '\n*** Total de Transferencias Pix criadas : '+ transferList.length +
         '\n*** Porcentagem das Transferencias Pix com sucesso: '+ getPerSucess() +'%'+
         '\n*** Total de Transferencias Pix com Falha: '+ transferFailedList.length +
         '\n*** Erros encontrados nas transferências com falha: ' + Array.from(new Set(transferFailedList)) +
-        '\n*** Tempo medio de criacao do logs (sucesso ou falha) em segundos: '+ average +
+        '\n*** Tempo medio de criacao dos logs (sucesso ou falha) em segundos: '+ average +
         '\n-----------------------------------------------------------------------';
     task.stop();
     
