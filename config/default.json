@@ -1,0 +1,6 @@
+{
+    "environment": "sandbox",
+    "projectId": "6236122648674304",
+    "privateKey": "-----BEGIN EC PARAMETERS-----\nBgUrgQQACg==\n-----END EC PARAMETERS-----\n-----BEGIN EC PRIVATE KEY-----\nMHQCAQEEINDJKqPsgNyIjfqlbkrHtBFl7EJGX0oHKqQawzIO3y4FoAcGBSuBBAAK\noUQDQgAEXSIezYEkc6XOdcFwADIFyENTvbsEx8y7eYcPRqGayt7ZWsfCKqVR74GM\nngKRXv6PGMfDRs25FqKBjgVR5pEx4Q==\n-----END EC PRIVATE KEY-----\n",
+    "numberLimitExec": "8"
+}
