@@ -20,10 +20,12 @@ Objetivos:
 ### Instalação do projeto
 * Baixe o repositório do projeto, navegue via terminal até a pasta e instale as dependências necessárias com `npm install`.
 
-npm install starkbank
-npm install thread-sleep
-npm install --save express node-cron fs
-
+ ```
+    npm install starkbank
+    npm install thread-sleep
+    npm install --save express node-cron fs
+    
+ ```
 
 ## Como rodar o projeto
 
