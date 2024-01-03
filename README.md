@@ -25,7 +25,7 @@ Objetivos:
     npm install starkbank
     npm install thread-sleep
     npm install --save express node-cron fs
-
+    npm install config
  ```
  
 
