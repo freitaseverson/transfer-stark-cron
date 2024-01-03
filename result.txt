@@ -1,0 +1,8 @@
+
+------------------ RELATORIO EXECUCAO - 02/01/2024 22:32:03 ----------------------- 
+*** Total de Transferencias Pix criadas : 20
+*** Porcentagem das Transferencias Pix com sucesso: 95%
+*** Total de Transferencias Pix com Falha: 1
+*** Erros encontrados nas transferências com falha: Target account is blocked
+*** Tempo medio de criacao do logs (sucesso ou falha) em segundos: 22.13
+-----------------------------------------------------------------------
