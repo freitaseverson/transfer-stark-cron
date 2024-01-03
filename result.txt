@@ -1,8 +1,8 @@
 
------------------- RELATORIO EXECUCAO - 02/01/2024 22:32:03 ----------------------- 
-*** Total de Transferencias Pix criadas : 20
-*** Porcentagem das Transferencias Pix com sucesso: 95%
-*** Total de Transferencias Pix com Falha: 1
-*** Erros encontrados nas transferências com falha: Target account is blocked
-*** Tempo medio de criacao do logs (sucesso ou falha) em segundos: 22.13
+------------------ RELATORIO EXECUCAO - 02/01/2024 23:53:03 ----------------------- 
+*** Total de Transferencias Pix criadas : 80
+*** Porcentagem das Transferencias Pix com sucesso: 85%
+*** Total de Transferencias Pix com Falha: 12
+*** Erros encontrados nas transferências com falha: Informed tax ID does not match account owner,The specified amount is greater than the maximum allowed by this account,Specified amount is zero,Target account is closed,Invalid account type,The transfer was rejected by the receiving bank,Transfer type is not supported on this account,Target account is blocked
+*** Tempo medio de criacao do logs (sucesso ou falha) em segundos: 19.12
 -----------------------------------------------------------------------
